@@ -49,6 +49,13 @@
                 <transition name="fade" mode="out-in">
                     <component :is="selectedComponent"></component>
                 </transition>
+                <button class="btn btn-primary" @click="addItem">Add</button>
+                <br><br>
+                <ul class="list-group">
+                    <transition-group name="slide">
+                        <li class="list-group-item" v-for="(number, index) in numbers" @click="removeItem(index)" :key="number">{{ number }}</li>
+                    </transition-group>
+                </ul>
             </div>
         </div>
     </div>
@@ -65,7 +72,8 @@
                 alertAnimation: 'fade',
                 load: true,
                 elementWidth: 100,
-                selectedComponent:'app-success-alert'
+                selectedComponent:'app-success-alert',
+                numbers: [1, 2, 3, 4, 5, 6]
             }
         },
         components:{
@@ -118,6 +126,13 @@
             },
             leaveCancelled(el){
                 console.log('leaveCancelled')
+            },
+            addItem(){
+                const pos = Math.floor(Math.random() * this.numbers.length)
+                this.numbers.splice(pos, 0, this.numbers.length + 1)
+            },
+            removeItem(index){
+                this.numbers.splice(index, 1)
             }
         }
     }
@@ -128,10 +143,10 @@
         opacity: 0;
     }
     .fade-enter-active{
-        transition: opacity 1s;
+        transition: opacity .5s;
     }
     .fade-leave-active{
-        transition: opacity 1s;
+        transition: opacity .5s;
     }
     .fade-leave-to{
         opacity: 0;
@@ -141,15 +156,19 @@
         opacity: 0;
     }
     .slide-enter-active{
-        transition: opacity 1s;
+        transition: opacity .5s;
         animation: slide-in 1s ease-out forwards;
     }
     .slide-leave-active{
-        transition: opacity 3s;
+        transition: opacity .5s;
         animation: slide-out 1s ease-out forwards;
+        position: absolute;
     }
     .slide-leave-to{
         opacity: 0;
+    }
+    .slide-move{
+        transition: transform 1s;
     }
     
     @keyframes slide-in {
